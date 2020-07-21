@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>异步加载数据</title>
+    <script src="js/echarts.js"></script>
+    <script src="js/jquery-3.3.1.js"></script>
+
+    <script type="text/javascript">
+        $(window.setInterval(function () {
+            var myChart = echarts.init($("#main")[0]);
+
+            /* 拼上随机参数, 是为了避免去浏览器本地缓存访问*/
+            $.get("show.action?param="+Math.random()).done(function(data){
+                myChart.setOption({
+                    xAxis: {
+                        type: 'category',
+                        data: data.xData
+                    },
+                    yAxis:{
+                        /* k-v 的value值, 全为字符串类型, 不要忘记加单双引号!!!!*/
+                        type: 'value'
+                    },
+                    series:{
+                        type: 'bar',
+                        data: data.seriesData
+                    }
+                })
+            })
+        }, 2000))
+    </script>
+</head>
+<body>
+    <div id="main" style="width: 600px;height: 500px"></div>
+</body>
+</html>
